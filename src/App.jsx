@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from './Services/Protected';
 import AnalysisWrapper from './Pages/AnalysisWrapper';
 import DashBoard from './Pages/DashBoard';
+import PipeLine from './Pages/PipeLine';
 
 const App = () => {
     return (
@@ -13,8 +14,9 @@ const App = () => {
             <Route element={<ProtectedRoutes />}>
               <Route path='/dashboard' element={<DashBoard />}>
               <Route index element={<AnalysisWrapper />} />
+              <Route path='pipeline' element={<PipeLine />}/>
             </Route>
-        </Route>
+          </Route>
           </Routes>
       </div>
     )

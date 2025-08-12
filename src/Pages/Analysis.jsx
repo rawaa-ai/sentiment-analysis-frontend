@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import StocksData from '../Components/SearchBarComponent/SearchStocks';
 import SentimentToggle from '../Components/AnalysisComp/SentimentToggle';
 import AnalChart from '../Components/AnalysisComp/AnalChart';
 import { useColorDropdown } from '../Context/Theme';
@@ -221,17 +220,12 @@ const Analysis = () => {
             <h2 className="text-2xl font-bold" style={{ color: selectedScheme.headingColor }}>{selectedName} Sentiment Analysis</h2>
 
             <div className='grid grid-cols-3 gap-6'>
-                <div className='flex items-end'>
-                    <SentimentToggle
-                        title="Company Sentiments"
-                        name="company_sentiment"
-                        setSelectedSectorType={setSelectedCompanyType}
-                        selectedSectorType={selectedCompanyType} 
-                    />
-                    <div className='w-20'>
-                        <StocksData onItemSelected={setSelectedTicker} onSelectedName={setSelectedName} width={280} design={"top-40"}/>
-                    </div>
-                </div>
+                <SentimentToggle
+                    title="Company Sentiments"
+                    name="company_sentiment"
+                    setSelectedSectorType={setSelectedCompanyType}
+                    selectedSectorType={selectedCompanyType} 
+                />
                 <div className='relative flex items-end gap-3'>
                     <SentimentToggle
                         title="Sector Sentiments"

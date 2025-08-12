@@ -139,7 +139,7 @@ const Message = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="flex flex-col gap-4 max-w-xl mx-auto">
+                <div className="flex flex-col gap-4 max-w-xl mx-auto mt-40">
                     <AverageDropDown
                         averages={llm_models.map(model => ({
                             id: model,
@@ -150,7 +150,7 @@ const Message = () => {
                         wid={"300px"}
                         hei={"fit"}
                     />
-                    <div className="p-4 rounded-xl shadow-sm h-[700px] w-[400px] overflow-y-auto" style={{
+                    <div className="p-4 rounded-xl shadow-sm h-[600px] w-[500px] overflow-y-auto" style={{
                         border: "1px solid gray"
                     }}>
                         <h3
@@ -175,7 +175,7 @@ const Message = () => {
                             hover:scale-105 hover:shadow-lg active:scale-95"
                         style={{
                             color: selectedScheme.headingColor,
-                            border: `1px solid ${selectedScheme.headingColor}`,
+                            border: `1px solid gray`,
                             backgroundColor: selectedScheme.background || "transparent"
                         }}
                         onClick={handleAnalyze}

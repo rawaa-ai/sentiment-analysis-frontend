@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import StocksData from "../Components/SearchBarComponent/SearchStocks";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Button } from '@mui/material';
 import ThemeDropdown from "../Components/ThemeDropDown";
@@ -81,13 +80,6 @@ export default function DashBoard() {
           </div>
             <ThemeDropdown />
           
-        </div>
-        <div className="flex flex-col items-center">
-          <div className="mt-2">
-            {location.pathname === '/dashboard' && (
-              <StocksData onItemSelected={setSelectedTicker} onSelectedName={setSelectedName} width={"600px"} design={"top-22 left-[38%]"}/>
-            )}
-          </div>
         </div>
       <Outlet context={{ selectedName, selectedTicker, time, setTime, concate, setConcate, setSelectedName, setSelectedTicker }} />
     </div>

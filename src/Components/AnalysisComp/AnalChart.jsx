@@ -5,7 +5,7 @@ import Navigation from "./Navigation";
 import { Button } from "@mui/material";
 import { useColorDropdown } from "../../Context/Theme";
 
-const AnalChart = ({ selectedTicker, sentiments, sentimentType, page, setPage, pageSize, setPageSize, cardCount, setCardCount, infoFilter, setInfoFilter, error }) => {
+const AnalChart = ({ sentiments, page, setPage, pageSize, setPageSize, cardCount, infoFilter, setInfoFilter, error }) => {
     const [cardData, setCustomCards] = useState([]);
     const { selectedScheme } = useColorDropdown();
 

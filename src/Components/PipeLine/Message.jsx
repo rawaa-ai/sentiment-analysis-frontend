@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AverageDropDown from '../AnalysisComp/AverageDropDown';
 import { useColorDropdown } from '../../Context/Theme';
 import axios from 'axios';
+import AnalChart from '../AnalysisComp/AnalChart';
 
 const Message = () => {
     const sourceTable = [
@@ -9,7 +10,7 @@ const Message = () => {
         "market_news",
         "company_news",
         "disclosures",
-        "reddit_news"
+        "reddit_posts"
     ];
     const [selectedSource, setSelectedSource] = useState("articles");
     const [url, setUrl] = useState("");
@@ -25,16 +26,43 @@ const Message = () => {
         "gpt-4o",
         "gpt-4o-mini"    
     ]
+    const relevence = [
+        "direct",
+        "indirect"
+    ];
+    const [selectedRelevance, setSelectedRelevance] = useState(relevence[0]);
     const [selectedModel, setSelectedModel] = useState(llm_models[0]);
     const [analysis, setAnalysis] = useState("");
     const [prompt, setPrompt] = useState([]);
+    const token = localStorage.getItem("token");
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [cards, setCards] = useState([]);
+
+    const fetchCards = async() => {
+        try {
+            const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/cache?news_type=${selectedSource}&page=${page}&page_size=${pageSize}&llm_model=${selectedModel}`);
+            setCards(response.data)
+        } catch (error) {
+            console.error("Error fetching cards", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchCards();
+    }, [page, pageSize, selectedModel, selectedSource])
+    console.log("cards", cards)
 
     const handleButtonsFunctionality = async (btn) => {
         if (btn === "Visit") {
             window.open(url, "_blank");
         } else if (btn === "Get Message") {
             try {
-                const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/?source_table=${selectedSource}&url=${url}`);
+                const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/?source_table=${selectedSource}&url=${url}`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 setMessages([response.data.message]);
             } catch (error) {
                 console.error("Error fetching messages", error);
@@ -44,19 +72,79 @@ const Message = () => {
 
     const handleAnalyze = async () => {
         try {
-            const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/analyse?message=${messages}&prompt=${prompt}&llm_model=${selectedModel}`)
+            const response = await axios.post(
+                `${BACKEND_URL}api/v1/sentiment-pipeline/analyse`,
+                {
+                    message: messages.join("\n"),
+                    prompt: prompt.join("\n"),
+                    llm_model: selectedModel
+                },
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
             setAnalysis(response.data.analysis);
         } catch (error) {
             console.error("Error fetching analysis", error);
         }
-    }
+    };
 
-    console.log("Message", messages);
+    // console.log("Message", messages);
 
     return (
         <div className="w-full h-screen p-6">
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-                <div className="flex flex-col gap-4 max-w-xl mx-auto">
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                <div className='flex flex-col gap-4'>
+                    <div className='flex items-center gap-2'>
+                        <AverageDropDown
+                            averages={sourceTable.map(source => ({
+                                id: source,
+                                name: source
+                                .replace(/_/g, " ")
+                                .replace(/\b\w/g, char => char.toUpperCase())
+                            }))}
+                            onSelect={(type) => setSelectedSource(type)}
+                            selected={selectedSource}
+                            wid={"200px"}
+                            hei={"fit"}
+                        />
+                        <AverageDropDown
+                            averages={relevence.map(source => ({
+                                id: source,
+                                name: source
+                                .replace(/_/g, " ")
+                                .replace(/\b\w/g, char => char.toUpperCase())
+                            }))}
+                            onSelect={(type) => setSelectedRelevance(type)}
+                            selected={selectedRelevance}
+                            wid={"200px"}
+                            hei={"fit"}
+                        />
+                    </div>
+                    <AverageDropDown
+                        averages={llm_models.map(model => ({
+                            id: model,
+                            name: model
+                        }))}
+                        onSelect={(type) => setSelectedModel(type)}
+                        selected={selectedModel}
+                        wid={"300px"}
+                        hei={"fit"}
+                    />
+                    <input type="text" name="date" placeholder="yyyy-mm-dd" 
+                        pattern="\d{4}-\d{2}-\d{2}" title="Enter date in YYYY-MM-DD format"
+                        className="rounded-xl focus:outline-none w-full p-3 shadow-sm placeholder-gray-400 transition-all duration-200 focus:ring-2"
+                        style={{
+                            color: selectedScheme.textColor,
+                            border: "1px solid gray"
+                        }}
+                    />
+
+                </div>
+                <div className="flex flex-col gap-4">
                     <AverageDropDown
                         averages={sourceTable.map(source => ({
                             id: source,
@@ -76,10 +164,11 @@ const Message = () => {
                         className="rounded-xl focus:outline-none w-full p-3 shadow-sm placeholder-gray-400 transition-all duration-200 focus:ring-2"
                         placeholder="Enter URL..."
                         style={{
-                            border: `1px solid ${selectedScheme.headingColor}`,
+                            border: `1px solid gray`,
                             color: selectedScheme.textColor
                         }}
                     />
+                    {/* <AnalChart sentiments={cards} page={page} setPage={setPage} pageSize={pageSize} setPageSize={setPageSize} cardCount={companyCardCount} setCardCount={setCompanyCardCount} infoFilter={companyInfoFilter} setInfoFilter={setCompanyInfoFilter} error={companytopNorError}/> */}
                     <div className="flex items-center gap-4 text-sm text-center w-full">
                         {["Visit", "Get Message"].map((btn) => (
                             <button
@@ -97,7 +186,7 @@ const Message = () => {
                             </button>
                         ))}
                     </div>
-                    <div className="p-4 rounded-xl shadow-sm">
+                    <div className="rounded-xl shadow-sm">
                         <h3
                             className="text-lg font-semibold mb-2"
                             style={{ color: selectedScheme.headingColor }}
@@ -139,7 +228,7 @@ const Message = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="flex flex-col gap-4 max-w-xl mx-auto mt-40">
+                <div className="flex flex-col gap-4 mt-40">
                     <AverageDropDown
                         averages={llm_models.map(model => ({
                             id: model,

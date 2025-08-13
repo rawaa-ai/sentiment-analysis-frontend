@@ -36,7 +36,17 @@ const AverageDropDown = ({ averages = [], onSelect, selected, wid, hei }) => {
                     fontSize: "10px",
                 }}
             >
-                {selectedItem}
+                <span
+                    style={{
+                        display: "inline-block",
+                        maxWidth: "100px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
+                >
+                    {selectedItem}
+                </span>
                 <ExpandMoreIcon sx={{ fontSize: "16px" }} />
             </Button>
 

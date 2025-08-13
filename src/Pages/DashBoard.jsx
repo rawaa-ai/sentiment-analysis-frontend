@@ -54,7 +54,7 @@ export default function DashBoard() {
                     display: "flex",
                     alignItems: "center",
                     border: "1px solid gray",
-                    py: .4,
+                    py: .2,
                     px: 3,
                     gap: 1,
                     fontSize: "10px",

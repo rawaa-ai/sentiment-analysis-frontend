@@ -100,7 +100,8 @@ const Message = () => {
     return (
         <div className="w-full p-6">
             <div className='flex gap-4'>
-                <div className='flex flex-col gap-4'>
+                {/* LEFT COLUMN: only change is adding flex-1 */}
+                <div className='flex flex-col gap-4 flex-1'>
                     <div className='flex items-center justify-between'>
                         <AverageDropDown
                             averages={sourceTable.map(source => ({
@@ -148,9 +149,12 @@ const Message = () => {
                     />
                     <Cards sentiments={cards} page={page} setPage={setPage} pageSize={pageSize} setPageSize={setPageSize} cardCount={cards.length} setClickeUrl={setUrl} />
                 </div>
-                <div className='flex flex-col w-full'>
+
+                {/* RIGHT COLUMN: only change is w-full -> flex-1 */}
+                <div className='flex flex-col flex-1'>
                     <div className='flex gap-4'>
-                        <div className="flex flex-col gap-4">
+                        {/* INNER LEFT (of right column): added flex-1 */}
+                        <div className="flex flex-col gap-4 flex-1">
                             <div className='flex items-center justify-between'>
                                 <AverageDropDown
                                     averages={sourceTable.map(source => ({
@@ -218,7 +222,9 @@ const Message = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-4">
+
+                        {/* INNER RIGHT (of right column): added flex-1 */}
+                        <div className="flex flex-col gap-4 flex-1">
                             <AverageDropDown
                                 averages={llm_models.map(model => ({
                                     id: model,
@@ -262,6 +268,7 @@ const Message = () => {
                             </div>
                         </div>
                     </div>
+
                     {analysis && (
                         <div className="w-full rounded-xl shadow-sm overflow-y-auto max-h-64">
                             <h3

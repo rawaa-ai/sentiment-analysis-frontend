@@ -53,7 +53,6 @@ const CardsList = ({ sentiments, pageSize, setPageSize, setClickeUrl }) => {
                                 >
                                     <p 
                                         className="mt-1 ml-1 cursor-pointer" 
-                                        style={{ textDecoration: 'underline dotted' }}
                                     >
                                         {sentiment.llm_notes || '-'}
                                     </p>

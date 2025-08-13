@@ -15,8 +15,10 @@ const Message = () => {
     const [selectedSource, setSelectedSource] = useState("articles");
     const [url, setUrl] = useState("");
     const [messages, setMessages] = useState([]);
+    const [infoFilter, setInfoFilter] = useState("latest");
     const { selectedScheme } = useColorDropdown();
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const [date, setDate] = useState("");
     const llm_models = [
         "deepseek-r1-distill-llama-70b",
         "llama-3.3-70b-versatile",
@@ -41,7 +43,7 @@ const Message = () => {
 
     const fetchCards = async() => {
         try {
-            const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/cache?news_type=${selectedSource}&page=${page}&page_size=${pageSize}&llm_model=${selectedModel}`);
+            const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/cache?news_type=${selectedSource}&page=${page}&page_size=${pageSize}&llm_model=${selectedModel}&relevance=${selectedRelevance}&specific_date=${date}`);
             setCards(response.data)
         } catch (error) {
             console.error("Error fetching cards", error);
@@ -50,7 +52,7 @@ const Message = () => {
 
     useEffect(() => {
         fetchCards();
-    }, [page, pageSize, selectedModel, selectedSource])
+    }, [page, pageSize, selectedModel, selectedSource, date])
     console.log("cards", cards)
 
     const handleButtonsFunctionality = async (btn) => {
@@ -134,15 +136,16 @@ const Message = () => {
                         wid={"300px"}
                         hei={"fit"}
                     />
-                    <input type="text" name="date" placeholder="yyyy-mm-dd" 
-                        pattern="\d{4}-\d{2}-\d{2}" title="Enter date in YYYY-MM-DD format"
+                    <input type="date" name="date"
                         className="rounded-xl focus:outline-none w-full p-3 shadow-sm placeholder-gray-400 transition-all duration-200 focus:ring-2"
                         style={{
                             color: selectedScheme.textColor,
                             border: "1px solid gray"
                         }}
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
                     />
-
+                    <AnalChart sentiments={cards} page={page} setPage={setPage} pageSize={pageSize} setPageSize={setPageSize} infoFilter={infoFilter} setInfoFilter={setInfoFilter} cardCount={cards.length} />
                 </div>
                 <div className="flex flex-col gap-4">
                     <AverageDropDown
@@ -168,7 +171,6 @@ const Message = () => {
                             color: selectedScheme.textColor
                         }}
                     />
-                    {/* <AnalChart sentiments={cards} page={page} setPage={setPage} pageSize={pageSize} setPageSize={setPageSize} cardCount={companyCardCount} setCardCount={setCompanyCardCount} infoFilter={companyInfoFilter} setInfoFilter={setCompanyInfoFilter} error={companytopNorError}/> */}
                     <div className="flex items-center gap-4 text-sm text-center w-full">
                         {["Visit", "Get Message"].map((btn) => (
                             <button

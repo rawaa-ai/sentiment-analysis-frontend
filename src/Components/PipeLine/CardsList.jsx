@@ -37,6 +37,8 @@ const CardsList = ({ sentiments, pageSize, setPageSize, setClickeUrl }) => {
                                                 whiteSpace: 'pre-wrap',
                                                 maxWidth: '400px',
                                                 overflowX: 'auto',
+                                                height: "300px",
+                                                overflow: "auto",
                                                 padding: '8px',
                                                 borderRadius: '6px',
                                                 background: selectedScheme.backgroundColor,

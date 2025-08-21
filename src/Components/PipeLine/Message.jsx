@@ -44,7 +44,11 @@ const Message = () => {
 
     const fetchCards = async() => {
         try {
-            const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/cache?news_type=${selectedSource}&page=${page}&page_size=${pageSize}&llm_model=${selectedModel1}&relevance=${selectedRelevance}&specific_date=${date}`);
+            const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/cache?news_type=${selectedSource}&page=${page}&page_size=${pageSize}&llm_model=${selectedModel1}&relevance=${selectedRelevance}&specific_date=${date}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             setCards(response.data)
         } catch (error) {
             console.error("Error fetching cards", error);
@@ -61,7 +65,7 @@ const Message = () => {
             window.open(url, "_blank");
         } else if (btn === "Get Message") {
             try {
-                const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/?source_table=${selectedSource}&url=${url}`, {
+                const response = await axios.get(`${BACKEND_URL}api/v1/sentiment-pipeline/?source_table=${selectedSource}&url=${encodeURIComponent(url)}`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -100,7 +104,6 @@ const Message = () => {
     return (
         <div className="w-full p-6">
             <div className='flex gap-4'>
-                {/* LEFT COLUMN: only change is adding flex-1 */}
                 <div className='flex flex-col gap-4 flex-1'>
                     <div className='flex items-center justify-between'>
                         <AverageDropDown
@@ -150,10 +153,8 @@ const Message = () => {
                     <Cards sentiments={cards} page={page} setPage={setPage} pageSize={pageSize} setPageSize={setPageSize} cardCount={cards.length} setClickeUrl={setUrl} />
                 </div>
 
-                {/* RIGHT COLUMN: only change is w-full -> flex-1 */}
                 <div className='flex flex-col flex-1'>
                     <div className='flex gap-4'>
-                        {/* INNER LEFT (of right column): added flex-1 */}
                         <div className="flex flex-col gap-4 flex-1">
                             <div className='flex items-center justify-between'>
                                 <AverageDropDown
@@ -223,7 +224,6 @@ const Message = () => {
                             </div>
                         </div>
 
-                        {/* INNER RIGHT (of right column): added flex-1 */}
                         <div className="flex flex-col gap-4 flex-1">
                             <AverageDropDown
                                 averages={llm_models.map(model => ({
@@ -270,7 +270,7 @@ const Message = () => {
                     </div>
 
                     {analysis && (
-                        <div className="w-full rounded-xl shadow-sm overflow-y-auto max-h-64">
+                        <div className="w-full rounded-xl shadow-sm">
                             <h3
                                 className="text-lg font-semibold mb-2"
                                 style={{ color: selectedScheme.headingColor }}
@@ -278,7 +278,7 @@ const Message = () => {
                                 Analysis
                             </h3>
                             <div
-                                className="text-sm whitespace-pre-wrap"
+                                className="text-sm whitespace-pre-wrap overflow-y-auto max-h-32"
                                 style={{
                                     color: selectedScheme.textColor,
                                     border: "1px solid gray",

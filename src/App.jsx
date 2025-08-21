@@ -5,6 +5,7 @@ import ProtectedRoutes from './Services/Protected';
 import AnalysisWrapper from './Pages/AnalysisWrapper';
 import DashBoard from './Pages/DashBoard';
 import PipeLine from './Pages/PipeLine';
+import Score from './Pages/Score';
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
               <Route path='/dashboard' element={<DashBoard />}>
               <Route index element={<AnalysisWrapper />} />
               <Route path='pipeline' element={<PipeLine />}/>
+              <Route path='score' element={<Score />}/>
             </Route>
           </Route>
           </Routes>

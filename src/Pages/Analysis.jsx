@@ -4,6 +4,7 @@ import SentimentToggle from '../Components/AnalysisComp/SentimentToggle';
 import AnalChart from '../Components/AnalysisComp/AnalChart';
 import { useColorDropdown } from '../Context/Theme';
 import AverageDropDown from '../Components/AnalysisComp/AverageDropDown';
+import StocksData from '../Components/SearchBarComponent/SearchStocks';
 
 const Analysis = () => {
     const [tasiTopNerSentiment, setTasiTopNerSentiment] = useState([]);
@@ -32,6 +33,16 @@ const Analysis = () => {
     const [selectedSector, setSelectedSector] = useState('financial_services');
     const [availableSectors, setAvailableSectors] = useState([]);
     const [stockSector, setStockSector] = useState("");
+    const llm_models = [
+        "deepseek-r1-distill-llama-70b",
+        "llama-3.3-70b-versatile",
+        "openai/gpt-oss-120b",
+        "gpt-5",
+        "gpt-5-mini",
+        "gpt-4o",
+        "gpt-4o-mini"    
+    ]
+    const [selectedModel, setSelectedModel] = useState(llm_models[0]);
 
     const { selectedScheme } = useColorDropdown();
     const token = localStorage.getItem("token");
@@ -217,15 +228,32 @@ const Analysis = () => {
 
     return (
         <div className="p-2 w-full px-30 overflow-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <h2 className="text-2xl font-bold" style={{ color: selectedScheme.headingColor }}>{selectedName} Sentiment Analysis</h2>
+            <div className='flex items-center justify-between'>
+                <h2 className="text-2xl font-bold" style={{ color: selectedScheme.headingColor }}>{selectedName} Sentiment Analysis</h2>
+                <AverageDropDown
+                    averages={llm_models.map(model => ({
+                        id: model,
+                        name: model
+                    }))}
+                    onSelect={(type) => setSelectedModel(type)}
+                    selected={selectedModel}
+                    wid={"200px"}
+                    hei={"fit"}
+                />
+            </div>
 
             <div className='grid grid-cols-3 gap-6'>
-                <SentimentToggle
-                    title="Company Sentiments"
-                    name="company_sentiment"
-                    setSelectedSectorType={setSelectedCompanyType}
-                    selectedSectorType={selectedCompanyType} 
-                />
+                <div className='flex items-end'>
+                    <SentimentToggle
+                        title="Company Sentiments"
+                        name="company_sentiment"
+                        setSelectedSectorType={setSelectedCompanyType}
+                        selectedSectorType={selectedCompanyType}
+                    />
+                    <div className='w-20'>
+                        <StocksData onItemSelected={setSelectedTicker} onSelectedName={setSelectedName} width={240} design={"top-30 left-40"}/>
+                    </div>
+                </div>
                 <div className='relative flex items-end gap-3'>
                     <SentimentToggle
                         title="Sector Sentiments"

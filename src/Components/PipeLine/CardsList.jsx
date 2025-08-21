@@ -52,9 +52,9 @@ const CardsList = ({ sentiments, pageSize, setPageSize, setClickeUrl }) => {
                                     placement="right"
                                 >
                                     <p 
-                                        className="mt-1 ml-1 cursor-pointer" 
+                                        className="mt-1 ml-1 cursor-pointer line-clamp-1" 
                                     >
-                                        {sentiment.llm_notes || '-'}
+                                        {sentiment.url || '-'}
                                     </p>
                                 </Tooltip>
                             </div>

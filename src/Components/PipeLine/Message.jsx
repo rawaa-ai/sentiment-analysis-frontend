@@ -286,7 +286,7 @@ const Message = () => {
                                     borderRadius: "0.75rem"
                                 }}
                             >
-                                {analysis}
+                                {JSON.stringify(analysis)}
                             </div>
                         </div>
                     )}

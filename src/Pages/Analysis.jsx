@@ -37,12 +37,13 @@ const Analysis = () => {
         "deepseek-r1-distill-llama-70b",
         "llama-3.3-70b-versatile",
         "openai/gpt-oss-120b",
+        "qwen/qwen3-235b-a22b-2507",
         "gpt-5",
         "gpt-5-mini",
         "gpt-4o",
         "gpt-4o-mini"    
     ]
-    const [selectedModel, setSelectedModel] = useState(llm_models[0]);
+    const [selectedModel, setSelectedModel] = useState(llm_models[3]);
 
     const { selectedScheme } = useColorDropdown();
     const token = localStorage.getItem("token");
@@ -66,7 +67,7 @@ const Analysis = () => {
 
         try {
             const response_top_ner_sentiment = await axios.get(
-                `${BACKEND_URL}api/v1/sentiments/top-ner-sentiments?entity_id=${selectedTicker}&sentiment_type=${selectedCompanyType}&page=${pageCompany}&page_size=${pageCompanySize}&info_filter=${companyInfoFilter}`
+                `${BACKEND_URL}api/v1/sentiments/top-ner-sentiments?entity_id=${selectedTicker}&sentiment_type=${selectedCompanyType}&llm_model=${selectedModel}&page=${pageCompany}&page_size=${pageCompanySize}&info_filter=${companyInfoFilter}`
             , 
             {
                 headers: {
@@ -107,7 +108,7 @@ const Analysis = () => {
     const fetchSelectedSectorSentiment = async () => {
         try {
             const response_top_ner_sentiment = await axios.get(
-                `${BACKEND_URL}api/v1/sentiments/top-ner-sentiments?entity_id=${selectedSector}&sentiment_type=${selectedSectorType}&page=${pageSector}&page_size=${pageSectorSize}&info_filter=${sectorInfoFilter}`
+                `${BACKEND_URL}api/v1/sentiments/top-ner-sentiments?entity_id=${selectedSector}&sentiment_type=${selectedSectorType}&llm_model=${selectedModel}&page=${pageSector}&page_size=${pageSectorSize}&info_filter=${sectorInfoFilter}`
             ,
             {
                 headers: {
@@ -132,7 +133,7 @@ const Analysis = () => {
     const fetchTASI = async () => {
         try {
             const response_top_ner_sentiment = await axios.get(
-                `${BACKEND_URL}api/v1/sentiments/top-ner-sentiments?entity_id=TASI&sentiment_type=${selectedTasiType}&page=${pageTASI}&page_size=${pageTASISize}&info_filter=${TasiInfoFilter}`
+                `${BACKEND_URL}api/v1/sentiments/top-ner-sentiments?entity_id=TASI&sentiment_type=${selectedTasiType}&llm_model=${selectedModel}&page=${pageTASI}&page_size=${pageTASISize}&info_filter=${TasiInfoFilter}`
             ,
             {
                 headers: {
@@ -206,7 +207,7 @@ const Analysis = () => {
 
     useEffect(() => {
         fetchCompanySentiment();
-    }, [selectedTicker, companyInfoFilter, selectedCompanyType, pageCompany, pageCompanySize]);
+    }, [selectedTicker, companyInfoFilter, selectedCompanyType, pageCompany, pageCompanySize, selectedModel]);
 
     useEffect(() => {
         fetchAvailableSectors();
@@ -214,11 +215,11 @@ const Analysis = () => {
 
     useEffect(() => {
         fetchSelectedSectorSentiment();
-    }, [selectedSector, sectorInfoFilter, selectedSectorType, pageSector, pageSectorSize]);
+    }, [selectedSector, sectorInfoFilter, selectedSectorType, pageSector, pageSectorSize, selectedModel]);
 
     useEffect(() => {
         fetchTASI();
-    }, [TasiInfoFilter, selectedTasiType, pageTASI, pageTASISize]);
+    }, [TasiInfoFilter, selectedTasiType, pageTASI, pageTASISize, selectedModel]);
 
     useEffect(() => {
         if (stockSector) {

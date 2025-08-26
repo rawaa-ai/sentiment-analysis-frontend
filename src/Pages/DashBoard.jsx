@@ -33,6 +33,8 @@ export default function DashBoard() {
   const navigationData = [
     { name: "Dashboard", link: "/dashboard" },
     { name: "Pipeline", link: "/dashboard/pipeline" },
+    { name: "Stats", link: "/dashboard/stats"},
+    { name: "Score", link: "/dashboard/score" },
   ];
 
   return (

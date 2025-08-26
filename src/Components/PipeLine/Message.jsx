@@ -14,7 +14,9 @@ const Message = () => {
         "reddit_posts"
     ];
     const [selectedSource, setSelectedSource] = useState("articles");
+    const [selectedSource2, setSelectedSource2] = useState("articles");
     const [url, setUrl] = useState("");
+    // const [getPrompt, setGetPrompt] = useState([]);
     const [messages, setMessages] = useState([]);
     const { selectedScheme } = useColorDropdown();
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -23,6 +25,7 @@ const Message = () => {
         "deepseek-r1-distill-llama-70b",
         "llama-3.3-70b-versatile",
         "openai/gpt-oss-120b",
+        "qwen/qwen3-235b-a22b-2507",
         "gpt-5",
         "gpt-5-mini",
         "gpt-4o",
@@ -41,6 +44,49 @@ const Message = () => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [cards, setCards] = useState([]);
+
+    const getPrompt = async () => {
+        try {
+            const response = await axios.get(
+                `${BACKEND_URL}api/v1/prompts/get-prompt?prompt_key=${selectedSource2}`,
+                { headers: { "Authorization": `Bearer ${token}` } }
+            );
+            setPrompt(
+                Array.isArray(response.data.prompt)
+                ? response.data.prompt
+                : (response.data.prompt ? response.data.prompt.split("\n") : [])
+            );
+        } catch (error) {
+            console.error("Error fetching cards", error);
+        }
+    };
+      
+    const updatePrompt = async () => {
+        try {
+            const response = await axios.put(
+                `${BACKEND_URL}api/v1/prompts/set-prompt?prompt_key=${selectedSource2}&prompt=${prompt.join("\n")}`,
+                {},
+                { headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" } }
+            );
+            setPrompt(
+                Array.isArray(response.data.prompt)
+                ? response.data.prompt
+                : (response.data.prompt ? response.data.prompt.split("\n") : [])
+            );
+        } catch (error) {
+            console.error("Error fetching cards", error);
+        }
+    };
+      
+    useEffect(() => {
+        updatePrompt();
+    }, [selectedSource2])
+
+    useEffect(() => {
+        getPrompt();
+    }, [selectedSource2])
+
+    // console.log("prompt:", prompt)
 
     const fetchCards = async() => {
         try {
@@ -142,7 +188,7 @@ const Message = () => {
                         />
                     </div>
                     <input type="date" name="date"
-                        className="rounded-xl focus:outline-none w-full p-3 shadow-sm placeholder-gray-400 transition-all duration-200 focus:ring-2"
+                        className="rounded-full focus:outline-none w-full px-3 py-2 shadow-sm placeholder-gray-400 transition-all duration-200 focus:ring-2"
                         style={{
                             color: selectedScheme.textColor,
                             border: "1px solid gray"
@@ -193,7 +239,7 @@ const Message = () => {
                                 type="text"
                                 value={url || ""}
                                 onChange={(e) => setUrl(e.target.value)}
-                                className="rounded-xl focus:outline-none w-full p-3 shadow-sm placeholder-gray-400"
+                                className="rounded-full focus:outline-none w-full px-3 py-2 shadow-sm placeholder-gray-400"
                                 placeholder="Enter URL..."
                                 style={{
                                     border: `1px solid gray`,
@@ -224,28 +270,76 @@ const Message = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-4 flex-1">
-                            <AverageDropDown
-                                averages={llm_models.map(model => ({
-                                    id: model,
-                                    name: model
-                                }))}
-                                onSelect={(type) => setSelectedModel2(type)}
-                                selected={selectedModel2}
-                                wid={"300px"}
-                                hei={"fit"}
-                            />
-                            <button
-                                className="rounded-xl px-5 py-2 w-[500px] cursor-pointer"
-                                style={{
+                        <div className="flex flex-col gap-4 flex-1 mt-2">
+                            <div className='flex items-center gap-1'>
+                                <AverageDropDown
+                                    averages={sourceTable.map(model => ({
+                                        id: model,
+                                        name: model
+                                    }))}
+                                    onSelect={(type) => setSelectedSource2(type)}
+                                    selected={selectedSource2}
+                                    wid={"180px"}
+                                    hei={"fit"}
+                                />
+                                <Button onClick={getPrompt} variant="contained" color="white" sx={{
+                                    borderRadius: 10,
+                                    textTransform: "none",
+                                    background: selectedScheme.backgroundColor,
                                     color: selectedScheme.headingColor,
-                                    border: `1px solid gray`,
-                                    backgroundColor: selectedScheme.background || "transparent"
-                                }}
-                                onClick={handleAnalyze}
-                            >
-                                Analyze
-                            </button>
+                                    display: "flex",
+                                    alignItems: "center",
+                                    border: "1px solid gray",
+                                    py: .4,
+                                    px: 3,
+                                    width: "170px",
+                                    fontSize: "10px",
+                                }}>
+                                    Get Prompt
+                                </Button>
+                                <Button onClick={updatePrompt} variant="contained" color="white" sx={{
+                                    borderRadius: 10,
+                                    textTransform: "none",
+                                    background: selectedScheme.backgroundColor,
+                                    color: selectedScheme.headingColor,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    border: "1px solid gray",
+                                    py: .4,
+                                    px: 3,
+                                    width: "170px",
+                                    fontSize: "10px",
+                                }}>
+                                    Update Prompt
+                                </Button>
+                            </div>
+                            <div className='flex items-center gap-1'>
+                                <AverageDropDown
+                                    averages={llm_models.map(model => ({
+                                        id: model,
+                                        name: model
+                                    }))}
+                                    onSelect={(type) => setSelectedModel2(type)}
+                                    selected={selectedModel2}
+                                    wid={"260px"}
+                                    hei={"fit"}
+                                />
+                                <Button onClick={handleAnalyze} variant="contained" color="white" sx={{
+                                    borderRadius: 10,
+                                    textTransform: "none",
+                                    background: selectedScheme.backgroundColor,
+                                    color: selectedScheme.headingColor,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    border: "1px solid gray",
+                                    py: .4,
+                                    px: 3,
+                                    width: "260px",
+                                    fontSize: "10px",
+                                }}>
+                                    Analyze
+                                </Button>
+                            </div>
                             <h3
                                 className="text-lg font-semibold"
                                 style={{ color: selectedScheme.headingColor }}
@@ -286,7 +380,7 @@ const Message = () => {
                                     borderRadius: "0.75rem"
                                 }}
                             >
-                                {analysis}
+                                {JSON.stringify(analysis)}
                             </div>
                         </div>
                     )}

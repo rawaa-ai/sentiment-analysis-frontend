@@ -22,8 +22,9 @@ const RoundedBar = (props) => {
 
 const Stats = () => {
     const [chartData, setChartData] = useState([]);
-    const [year, setYear] = useState(2025);
-    const [month, setMonth] = useState(1);
+    const today = new Date();
+    const [year, setYear] = useState(today.getFullYear());
+    const [month, setMonth] = useState(today.getMonth() + 1);
     const { selectedScheme } = useColorDropdown();
     const sourceTable = [
         "all",
@@ -59,50 +60,64 @@ const Stats = () => {
     }, [year, month, selectedSource]);
 
     return (
-        <div className="w-full max-w-[90%] mx-auto space-y-4">
-
-            <AverageDropDown
-                averages={sourceTable.map(source => ({
-                    id: source,
-                    name: source
-                        .replace(/_/g, " ")
-                        .replace(/\b\w/g, char => char.toUpperCase())
-                }))}
-                onSelect={(type) => setSelectedSource(type)}
-                selected={selectedSource}
-                wid={"200px"}
-                hei={"fit"}
-            />
-
-            <div className="flex justify-center items-center gap-6 text-lg font-bold" style={{
-                color: selectedScheme.headingColor
-            }}>
-                <button 
-                    onClick={() => setYear(year - 1)} 
-                    className="px-2 py-1 bg-gray-800 text-white rounded cursor-pointer"
-                >
-                    ←
-                </button>
-                <span>{year}</span>
-                <button 
-                    onClick={() => setYear(prev => prev === 2025 ? 2025 : prev + 1)} 
-                    className="px-2 py-1 bg-gray-800 text-white rounded cursor-pointer"
-                >
-                    →
-                </button>
-                <button 
-                    onClick={() => setMonth(prev => prev > 1 ? prev - 1 : 12)} 
-                    className="ml-10 px-2 py-1 bg-gray-800 text-white rounded cursor-pointer"
-                >
-                    ←
-                </button>
-                <span>{monthNames[month - 1]}</span> 
-                <button 
-                    onClick={() => setMonth(prev => prev < 12 ? prev + 1 : 1)} 
-                    className="px-2 py-1 bg-gray-800 text-white rounded cursor-pointer"
-                >
-                    →
-                </button>
+        <div className="w-full max-w-[90%] mx-auto space-y-4 min-h-screen flex flex-col items-center justify-center">
+            <div className="flex items-center justify-between w-[90%]">
+                <AverageDropDown
+                    averages={sourceTable.map(source => ({
+                        id: source,
+                        name: source
+                            .replace(/_/g, " ")
+                            .replace(/\b\w/g, char => char.toUpperCase())
+                    }))}
+                    onSelect={(type) => setSelectedSource(type)}
+                    selected={selectedSource}
+                    wid={"200px"}
+                    hei={"fit"}
+                />
+                <div className="flex justify-center items-center gap-6 text-lg font-bold" style={{
+                    color: selectedScheme.headingColor
+                }}>
+                    <div className='flex items-center gap-2' style={{
+                        color: selectedScheme.headingColor,
+                        border: '1px solid gray',
+                        borderRadius: '20px',
+                        padding: '1px 10px'
+                    }}>
+                        <button
+                            onClick={() => setYear(year - 1)}
+                            className="rounded cursor-pointer"
+                        >
+                            ←
+                        </button>
+                        <span>{year}</span>
+                        <button
+                            onClick={() => setYear(prev => prev === 2025 ? 2025 : prev + 1)}
+                            className="rounded cursor-pointer"
+                        >
+                            →
+                        </button>
+                    </div>
+                    <div className='flex items-center gap-2' style={{
+                        color: selectedScheme.headingColor,
+                        border: '1px solid gray',
+                        borderRadius: '20px',
+                        padding: '1px 10px'
+                    }}>
+                        <button
+                            onClick={() => setMonth(prev => prev > 1 ? prev - 1 : 12)}
+                            className="rounded cursor-pointer"
+                        >
+                            ←
+                        </button>
+                        <span>{monthNames[month - 1]}</span>
+                        <button
+                            onClick={() => setMonth(prev => prev < 12 ? prev + 1 : 1)}
+                        className="rounded cursor-pointer"
+                        >
+                            →
+                        </button>
+                    </div>
+                </div>
             </div>
             <div className="w-full h-[800px]">
                 <ResponsiveContainer width="100%" height="100%">

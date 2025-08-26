@@ -64,19 +64,26 @@ const Message = () => {
     const updatePrompt = async () => {
         try {
             const response = await axios.put(
-                `${BACKEND_URL}api/v1/prompts/set-prompt?prompt_key=${selectedSource2}&prompt=${prompt.join("\n")}`,
-                {},
-                { headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" } }
+                `${BACKEND_URL}api/v1/prompts/set-prompt?prompt_key=${selectedSource2}`,
+                {
+                    prompt: Array.isArray(prompt) ? prompt.join("\n") : prompt
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
             );
+    
+            const p = response.data?.prompt;
             setPrompt(
-                Array.isArray(response.data.prompt)
-                ? response.data.prompt
-                : (response.data.prompt ? response.data.prompt.split("\n") : [])
+                Array.isArray(p) ? p : (typeof p === "string" ? p.split("\n") : [])
             );
         } catch (error) {
-            console.error("Error fetching cards", error);
+            console.error("Error updating prompt:", error);
         }
-    };
+    };    
       
     useEffect(() => {
         updatePrompt();

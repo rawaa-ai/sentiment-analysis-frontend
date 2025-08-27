@@ -23,7 +23,7 @@ const Score = () => {
         "gpt-4o",
         "gpt-4o-mini"  
     ];
-    const [selectedModel, setSelectedModel] = useState(llm_model[0]);
+    const [selectedModel, setSelectedModel] = useState(llm_model[3]);
 
     const [availableSectors, setAvailableSectors] = useState([]);
     const [selectedSector, setSelectedSector] = useState('financial_services');
@@ -33,6 +33,7 @@ const Score = () => {
     const dailyButtons = ["3weeks", "5weeks", "9weeks", "max"];
     const weeklyButtons = ["12weeks", "15weeks", "24weeks", "52weeks", "max"];
     const monthlyButtons = ["6months", "12months", "24months", "36months", "max"];
+    const [stockSector, setStockSector] = useState("");
 
     const [chartTimes, setChartTimes] = useState({
         daily: {
@@ -54,6 +55,23 @@ const Score = () => {
 
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+    const fetchCompanySentiment = async () => {
+        try {
+            const sector = await axios.get(
+                `${BACKEND_URL}api/v1/stocks/stock-sector?ticker=${selectedTicker}`
+            ,
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
+            setStockSector(sector.data);
+        } catch (error) {
+            console.error("Failed to fetch stock sector:", error);
+        }
+    };
+
     const fetchAvailableSectors = async () => {
         try {
             const response = await axios.get(
@@ -69,8 +87,18 @@ const Score = () => {
     };
 
     useEffect(() => {
+        fetchCompanySentiment();
+    }, [selectedTicker]);
+
+    useEffect(() => {
         fetchAvailableSectors();
     }, []);
+
+    useEffect(() => {
+        if (stockSector) {
+            setSelectedSector(stockSector);
+        }
+    }, [stockSector]);
 
     const chartGroups = [
         { label: "Daily Sentiment", buttons: dailyButtons, freq: "daily" },

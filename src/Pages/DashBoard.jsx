@@ -32,8 +32,8 @@ export default function DashBoard() {
 
   const navigationData = [
     { name: "Dashboard", link: "/dashboard" },
-    { name: "Pipeline", link: "/dashboard/pipeline" },
     { name: "Score", link: "/dashboard/score" },
+    { name: "Pipeline", link: "/dashboard/pipeline" },
     { name: "Stats", link: "/dashboard/stats"},
   ];
 
@@ -56,7 +56,7 @@ export default function DashBoard() {
                     display: "flex",
                     alignItems: "center",
                     border: "1px solid gray",
-                    py: .2,
+                    py: 0,
                     px: 3,
                     gap: 1,
                     fontSize: "10px",
@@ -72,7 +72,7 @@ export default function DashBoard() {
                   display: "flex",
                   alignItems: "center",
                   border: "1px solid gray",
-                  py: .4,
+                  py: 0,
                   px: 3,
                   gap: 1,
                   fontSize: "10px",

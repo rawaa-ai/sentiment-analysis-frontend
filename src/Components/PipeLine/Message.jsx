@@ -64,7 +64,7 @@ const Message = () => {
     const updatePrompt = async () => {
         try {
             const response = await axios.put(
-                `${BACKEND_URL}api/v1/prompts/set-prompt?prompt_key=${selectedSource2}`,
+                `${BACKEND_URL}api/v1/prompts/set-prompt/?prompt_key=${selectedSource2}`,
                 {
                     prompt: Array.isArray(prompt) ? prompt.join("\n") : prompt
                 },

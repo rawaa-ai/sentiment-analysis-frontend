@@ -7,6 +7,7 @@ import DashBoard from './Pages/DashBoard';
 import PipeLine from './Pages/PipeLine';
 import Score from './Pages/Score';
 import Stats from './Pages/Stats';
+import SentimentPerformanceOverview from './Pages/SentimentPerformanceOverview';
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
               <Route path='/dashboard' element={<DashBoard />}>
               <Route index element={<AnalysisWrapper />} />
               <Route path='pipeline' element={<PipeLine />}/>
+              <Route path='sen-overview' element={<SentimentPerformanceOverview />}/>
               <Route path='stats' element={<Stats />}/>
               <Route path='score' element={<Score />}/>
             </Route>

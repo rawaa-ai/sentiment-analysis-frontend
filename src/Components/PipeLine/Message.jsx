@@ -267,7 +267,7 @@ const Message = () => {
                                         value={messages.join("\n")}
                                         onChange={(e) => setMessages(e.target.value.split("\n"))}
                                         placeholder="Enter your prompt here..."
-                                        className="w-full h-[700px] p-3 rounded-xl focus:outline-none resize-none text-sm"
+                                        className="w-full h-[600px] p-3 rounded-xl focus:outline-none resize-none text-sm"
                                         style={{
                                             color: selectedScheme.textColor,
                                             background: "transparent"
@@ -360,7 +360,7 @@ const Message = () => {
                                     value={prompt.join("\n")}
                                     onChange={(e) => setPrompt(e.target.value.split("\n"))}
                                     placeholder="Enter your prompt here..."
-                                    className="w-full h-[700px] p-3 rounded-xl focus:outline-none resize-none text-sm"
+                                    className="w-full h-[600px] p-3 rounded-xl focus:outline-none resize-none text-sm"
                                     style={{
                                         color: selectedScheme.textColor,
                                         background: "transparent"
@@ -379,7 +379,7 @@ const Message = () => {
                                 Analysis
                             </h3>
                             <div
-                                className="text-sm whitespace-pre-wrap overflow-y-auto max-h-32"
+                                className="text-sm whitespace-pre-wrap overflow-y-auto h-[400px]"
                                 style={{
                                     color: selectedScheme.textColor,
                                     border: "1px solid gray",
@@ -387,7 +387,7 @@ const Message = () => {
                                     borderRadius: "0.75rem"
                                 }}
                             >
-                                {JSON.stringify(analysis)}
+                                {JSON.stringify(analysis, null, 2)}
                             </div>
                         </div>
                     )}

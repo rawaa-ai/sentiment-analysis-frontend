@@ -150,7 +150,7 @@ const Analysis = () => {
 
     const fetchCompanyCardCount = async() => {
         try {
-            const companyResponse = await axios.get(`${BACKEND_URL}api/v1/sentiments/sentiments-cards-count?entity_id=${selectedTicker}&sentiment_type=${selectedCompanyType}`, 
+            const companyResponse = await axios.get(`${BACKEND_URL}api/v1/sentiments/sentiments-cards-count?entity_id=${selectedTicker}&llm_model=${selectedModel}&sentiment_type=${selectedCompanyType}`, 
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -165,7 +165,7 @@ const Analysis = () => {
 
     const fetchSectorCardCount = async() => {
         try {
-            const sectorResponse = await axios.get(`${BACKEND_URL}api/v1/sentiments/sentiments-cards-count?entity_id=${selectedSector}&sentiment_type=${selectedSectorType}`,
+            const sectorResponse = await axios.get(`${BACKEND_URL}api/v1/sentiments/sentiments-cards-count?entity_id=${selectedSector}&llm_model=${selectedModel}&sentiment_type=${selectedSectorType}`,
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -180,7 +180,7 @@ const Analysis = () => {
 
     const fetchTASICardCount = async() => {
         try {
-            const tasiResponse = await axios.get(`${BACKEND_URL}api/v1/sentiments/sentiments-cards-count?entity_id=TASI&sentiment_type=${selectedTasiType}`, 
+            const tasiResponse = await axios.get(`${BACKEND_URL}api/v1/sentiments/sentiments-cards-count?entity_id=TASI&llm_model=${selectedModel}&sentiment_type=${selectedTasiType}`, 
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -195,15 +195,15 @@ const Analysis = () => {
 
     useEffect(() => {
         fetchCompanyCardCount();
-    }, [selectedTicker, companyInfoFilter, selectedCompanyType])
+    }, [selectedTicker, companyInfoFilter, selectedCompanyType, selectedModel])
 
     useEffect(() => {
         fetchSectorCardCount();
-    }, [selectedSector, sectorInfoFilter, selectedSectorType])
+    }, [selectedSector, sectorInfoFilter, selectedSectorType, selectedModel])
 
     useEffect(() => {
         fetchTASICardCount();
-    }, [TasiInfoFilter, selectedTasiType])
+    }, [TasiInfoFilter, selectedTasiType, selectedModel])
 
     useEffect(() => {
         fetchCompanySentiment();
